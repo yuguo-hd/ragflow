@@ -8,6 +8,7 @@ import { useFetchUserInfo } from '@/hooks/use-user-setting-request';
 import { IClientConversation } from '@/interfaces/database/chat';
 import { buildMessageUuidWithRole } from '@/utils/chat';
 import { useEffect } from 'react';
+import { useParams } from 'react-router';
 import {
   useGetSendButtonDisabled,
   useSendButtonDisabled,
@@ -48,6 +49,9 @@ export function SingleChatBox({
   const { createConversationBeforeUploadDocument } =
     useCreateConversationBeforeUploadDocument();
   const { conversationId } = useGetChatSearchParams();
+  const { id: chatId } = useParams();
+  const answerExport =
+    chatId && conversationId ? { chatId, sessionId: conversationId } : undefined;
   const disabled = useGetSendButtonDisabled();
   const sendDisabled = useSendButtonDisabled(value);
   const { visible, hideModal, documentId, selectedChunk, clickDocumentButton } =
@@ -101,6 +105,7 @@ export function SingleChatBox({
               }
               key={buildMessageUuidWithRole(message)}
               item={message}
+              answerExport={answerExport}
               nickname={userInfo.nickname}
               avatar={userInfo.avatar}
               avatarDialog={currentDialog.icon}

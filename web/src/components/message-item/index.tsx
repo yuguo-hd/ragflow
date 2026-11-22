@@ -20,6 +20,10 @@ import { UploadedMessageFiles } from '../next-message-item/uploaded-message-file
 import { RAGFlowAvatar } from '../ragflow-avatar';
 import SvgIcon from '../svg-icon';
 import { useTheme } from '../theme-provider';
+import {
+  AnswerExportButtons,
+  type AnswerExportContext,
+} from './answer-export-buttons';
 import { AssistantGroupButton, UserGroupButton } from './group-button';
 import styles from './index.module.less';
 
@@ -36,6 +40,7 @@ interface IProps extends Partial<IRemoveMessageById>, IRegenerateMessage {
   index: number;
   showLikeButton?: boolean;
   showLoudspeaker?: boolean;
+  answerExport?: AnswerExportContext;
 }
 
 const MessageItem = ({
@@ -53,6 +58,7 @@ const MessageItem = ({
   showLoudspeaker = true,
   visibleAvatar = true,
   nickname,
+  answerExport,
 }: IProps) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -162,6 +168,21 @@ const MessageItem = ({
                 )}
               </div>
             )}
+            {answerExport &&
+              isAssistant &&
+              index !== 0 &&
+              item.id &&
+              !loading &&
+              item.final !== false &&
+              (!item.conversationId ||
+                item.conversationId === answerExport.sessionId) &&
+              messageContent?.trim() && (
+                <AnswerExportButtons
+                  key={`${answerExport.chatId}/${answerExport.sessionId}`}
+                  {...answerExport}
+                  markdown={messageContent}
+                />
+              )}
             {isAssistant && (
               <ReferenceImageList
                 referenceChunks={reference.chunks}

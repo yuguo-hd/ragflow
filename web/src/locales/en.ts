@@ -1114,6 +1114,21 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       uploadFailed: 'Upload failed',
       regenerate: 'Regenerate',
       read: 'Read content',
+      exportAnswer: 'Download answer',
+      exportAs: 'Download as {{format}}',
+      exportFailed: 'Could not generate the download. Try again.',
+      exportModelUnavailable: 'Set a default chat model to download answers.',
+      exportProviderUnsupported:
+        'The default model provider does not support answer downloads.',
+      exportServiceUnconfigured:
+        'The document generation service is not configured.',
+      exportServiceUnreachable:
+        'Could not reach the document generation service.',
+      exportServiceBusy:
+        'The document generation service is busy. Try again later.',
+      exportTimeout: 'Document generation timed out. Try again.',
+      exportTooLarge: 'The answer exceeds the 1 MiB export limit.',
+      exportEmptyAnswer: 'This answer has no text to download.',
       tts: 'Text to speech',
       ttsTip:
         'Ensure you select a TTS model on the Settings page before enabling this toggle to play text as audio.',

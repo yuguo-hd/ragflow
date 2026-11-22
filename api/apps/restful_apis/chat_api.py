@@ -831,6 +831,27 @@ async def get_session(chat_id, session_id):
         return server_error_response(ex)
 
 
+@manager.route("/chats/<chat_id>/sessions/<session_id>/exports", methods=["POST"])  # noqa: F821
+@login_required
+async def export_session_answer(chat_id, session_id):
+    from api.apps.services.chat_export_service import ChatExportError, export_answer, validate_export_request
+
+    if not await _ensure_owned_chat(chat_id):
+        return get_json_result(code=404, message="export_session_not_found"), 404
+    found, conversation = await thread_pool_exec(ConversationService.get_by_id, session_id)
+    if not found or conversation.dialog_id != chat_id:
+        return get_json_result(code=404, message="export_session_not_found"), 404
+    try:
+        file_format, markdown = validate_export_request(await request.get_json(silent=True))
+        try:
+            model = await thread_pool_exec(get_tenant_default_model_by_type, current_user.id, LLMType.CHAT)
+        except Exception:  # noqa: BLE001 - Model resolution also raises plain Exception for a missing default.
+            raise ChatExportError(422, "export_model_unavailable") from None
+        return await export_answer(file_format, markdown, model)
+    except ChatExportError as error:
+        return get_json_result(code=error.status, message=error.code), error.status
+
+
 @manager.route("/chats/<chat_id>/sessions/<session_id>", methods=["PATCH"])  # noqa: F821
 @login_required
 async def update_session(chat_id, session_id):

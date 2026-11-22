@@ -103,6 +103,11 @@ const ChatCard = forwardRef(function ChatCard(
   ref,
 ) {
   const { id: dialogId } = useParams();
+  const { conversationId } = useGetChatSearchParams();
+  const answerExport =
+    dialogId && conversationId
+      ? { chatId: dialogId, sessionId: conversationId }
+      : undefined;
   const { patchChat } = usePatchChat();
 
   const { removeMessageById, derivedMessages, handlePressEnter, sendLoading } =
@@ -241,6 +246,7 @@ const ChatCard = forwardRef(function ChatCard(
                   }
                   key={buildMessageUuidWithRole(message)}
                   item={message}
+                  answerExport={answerExport}
                   nickname={userInfo.nickname}
                   avatar={userInfo.avatar}
                   avatarDialog={currentDialog.icon}

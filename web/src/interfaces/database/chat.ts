@@ -146,6 +146,7 @@ export interface IReferenceObject {
 
 export interface IAnswer {
   answer: string;
+  final?: boolean;
   attachment?: IAttachment;
   downloads?: IDocumentDownloadInfo[];
   reference?: IReference;
@@ -207,6 +208,7 @@ export interface IExternalChatInfo {
 
 export interface IMessage extends Message {
   id: string;
+  final?: boolean;
   reference?: IReference; // the latest news has reference
   conversationId?: string; // To distinguish which conversation the message belongs to
 }
